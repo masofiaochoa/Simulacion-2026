@@ -1,3 +1,5 @@
+# esta es una ruleta de algoritmos geneticos, la dejo por si sirve de algo
+
 import random
 
 from individual import Individual
