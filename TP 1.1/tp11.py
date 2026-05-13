@@ -14,11 +14,9 @@ import matplotlib.pyplot as plt
 import statistics
 import numpy as np
 
-# ruleta
-def ruleta():
-    return random.randint(0, 36)
-
-# validaciones del comando
+#-----------------
+#PASAJE Y VALIDACION DE ARGUMENTOS
+#-----------------
 if len(sys.argv) != 7:
     print("Uso: python tp11.py -c CANT_CORRIDAS -n CANT_TIRADAS -e NUMERO")
     sys.exit()
@@ -30,95 +28,180 @@ for i in range(len(sys.argv)):
         cant_tiradas = int(sys.argv[i + 1])
     elif sys.argv[i] == "-e":
         numero_elegido = int(sys.argv[i + 1])
+        
+#-----------------
+#VALORES ESPERADOS
+#-----------------
+FRECUENCIA_ESPERADA = 1 / 37
+PROMEDIO_ESPERADO = np.mean(range(37))
+VARIANZA_ESPERADA = np.var(range(37))
+DESVIO_ESPERADO = np.std(range(37))
 
-# valores teoricos esperados
-frecuencia_esperada = 1 / 37
-promedio_esperado = np.mean(range(37))
-varianza_esperada = np.var(range(37))
-desvio_esperado = np.std(range(37))
 
-# los acumuladores de las tiradas
-freq_total = [0] * cant_tiradas
-prom_total = [0] * cant_tiradas
-var_total = [0] * cant_tiradas
-std_total = [0] * cant_tiradas
+#-----------------
+#FUNCIONES
+#-----------------
 
-# simulacion, main, lo que querramos que sea
-# esto podria ser una funcion aparte para mas simplicidad
-for c in range(cant_corridas):
+#Devuelve un entero aleatorio comprendido entre 0 y 36 (37 valores posibles)
+def ruleta():
+    return random.randint(0, 36)
+    
 
-    aciertos = 0
-    suma = 0
-    valores = []
+#Simula una x cantidad de corridas con una y cantidad de tiradas y para el numero elegido calcula
+#frecuencia en la que se selecciona el numero elegido
+#promedio de valores obtenidos
+#varianza
+#desvío estandar
+def simularJuego(cant_corridas, cant_tiradas, numero_elegido):
 
-    for i in range(cant_tiradas):
+    frecuencias_por_corrida = []
+    promedios_por_corrida = []
+    varianzas_por_corrida = []
+    desvios_por_corrida = []
 
-        valor = ruleta()
-        valores.append(valor)
+    for c in range(cant_corridas):
+        aciertos = 0
+        suma = 0
+        valores = []
 
-        # Frecuencia
-        if valor == numero_elegido:
-            aciertos += 1
-        freq_total[i] += aciertos / (i + 1)
+        frecuencia_corrida = []
+        promedio_corrida = []
+        varianza_corrida = []
+        desvio_corrida = []
 
-        # Promedio
-        suma += valor
-        prom_total[i] += suma / (i + 1)
+        for i in range(cant_tiradas):
+            valor = ruleta()
+            valores.append(valor)
 
-        # Varianza y desvío
-        if i > 0:
-            var_total[i] += statistics.variance(valores)
-            std_total[i] += statistics.stdev(valores)
-        else:
-            var_total[i] += 0
-            std_total[i] += 0
+            # Frecuencia
+            if valor == numero_elegido:
+                aciertos += 1
+            frecuencia_corrida.append(aciertos / (i + 1))
 
-#  PROMEDIO FINAL ENTRE CORRIDAS
-freq_prom = [x / cant_corridas for x in freq_total]
-prom_prom = [x / cant_corridas for x in prom_total]
-var_prom = [x / cant_corridas for x in var_total]
-std_prom = [x / cant_corridas for x in std_total]
+            # Promedio
+            suma += valor
+            promedio_corrida.append(suma / (i + 1))
 
-#### OJO ####
-# hay que hacer mínimo 8 gráficas
-# estas graficas tmb podrian ser funciones distintas... veré dsp de hacerlo...
-plt.figure(figsize=(12, 8))
+            # Varianza y desvío
+            if i > 0:
+                varianza_corrida.append(statistics.variance(valores))
+                desvio_corrida.append(statistics.stdev(valores))
+            else:
+                varianza_corrida.append(0)
+                desvio_corrida.append(0)
 
-# Frecuencia
-plt.subplot(2, 2, 1)
-plt.plot(freq_prom, color='red', label="frn (frecuencia relativa del número X con respecto a n)")
-plt.axhline(y=frecuencia_esperada, color='blue', linestyle='--', label="fre (esperada)")
-plt.title("Frecuencia relativa")
-plt.xlabel("n (número de tiradas)")
-plt.ylabel("fr (frecuencia relativa)")
-plt.legend()
+        frecuencias_por_corrida.append(frecuencia_corrida)
+        promedios_por_corrida.append(promedio_corrida)
+        varianzas_por_corrida.append(varianza_corrida)
+        desvios_por_corrida.append(desvio_corrida)
 
-# Promedio
-plt.subplot(2, 2, 2)
-plt.plot(prom_prom, color='red', label="vpn (valor promedio de las tiradas con respecto a n)")
-plt.axhline(y=promedio_esperado, color='blue', linestyle='--', label="vpe (valor promedio esperado)")
-plt.title("Valor promedio")
-plt.xlabel("n (número de tiradas)")
-plt.ylabel("vp (valor promedio de las tiradas)")
-plt.legend()
+    return frecuencias_por_corrida, promedios_por_corrida, varianzas_por_corrida, desvios_por_corrida
 
-# Desvío
-plt.subplot(2, 2, 3)
-plt.plot(std_prom, color='red', label="vd (valor del desvío del número X n)")
-plt.axhline(y=desvio_esperado, color='blue', linestyle='--', label="vde (valor del desvío esperado)")
-plt.title("Desvío estándar")
-plt.xlabel("n (número de tiradas)")
-plt.ylabel("vd (valor del desvío)")
-plt.legend()
 
-# Varianza
-plt.subplot(2, 2, 4)
-plt.plot(var_prom, color='red', label="vnv (valor de la varianza del número X con respecto a n)")
-plt.axhline(y=varianza_esperada, color='blue', linestyle='--', label="vve (valor de la varianza esperada)")
-plt.title("Varianza")
-plt.xlabel("n (número de tiradas)")
-plt.ylabel("vv (valor de la varianza)")
-plt.legend()
 
-plt.tight_layout()
-plt.show()
+
+def funcionPrincipal():
+    frecuencias_por_corrida, promedios_por_corrida, varianzas_por_corrida, desvios_por_corrida = simularJuego(cant_corridas, cant_tiradas, numero_elegido)    
+    
+    #PROMEDIO GENERAL DE LAS MEDIDAS ENTRE TODAS LAS CORRIDAS
+    frencuencia_promedio = np.mean(frecuencias_por_corrida, axis=0)
+    promedio_promedio = np.mean(promedios_por_corrida, axis=0)
+    varianza_promedio = np.mean(varianzas_por_corrida, axis=0)
+    desvio_promedio = np.mean(desvios_por_corrida, axis=0)
+        
+    
+    ####GRAFICAS
+    plt.figure(figsize=(12, 8))
+
+    # Frecuencia Promedio
+    plt.subplot(2, 2, 1)
+    plt.plot(frencuencia_promedio, color='red', label="frn (frecuencia relativa del número X con respecto a n)")
+    plt.axhline(y=FRECUENCIA_ESPERADA, color='blue', linestyle='--', label="fre (esperada)")
+    plt.title("Frecuencia relativa promedio de todas las tiradas")
+    plt.xlabel("n (número de tiradas)")
+    plt.ylabel("fr (frecuencia relativa)")
+    plt.legend()
+
+    # Promedio Promedio
+    plt.subplot(2, 2, 2)
+    plt.plot(promedio_promedio, color='red', label="vpn (valor promedio de las tiradas con respecto a n)")
+    plt.axhline(y=PROMEDIO_ESPERADO, color='blue', linestyle='--', label="vpe (valor promedio esperado)")
+    plt.title("Valor promedio promediado de todas las tiradas")
+    plt.xlabel("n (número de tiradas)")
+    plt.ylabel("vp (valor promedio de las tiradas)")
+    plt.legend()
+
+    # Desvío Promedio
+    plt.subplot(2, 2, 3)
+    plt.plot(desvio_promedio, color='red', label="vd (valor del desvío del número X n)")
+    plt.axhline(y=DESVIO_ESPERADO, color='blue', linestyle='--', label="vde (valor del desvío esperado)")
+    plt.title("Desvío estándar promedio de todas las tiradas")
+    plt.xlabel("n (número de tiradas)")
+    plt.ylabel("vd (valor del desvío)")
+    plt.legend()
+
+    # Varianza Promedio
+    plt.subplot(2, 2, 4)
+    plt.plot(varianza_promedio, color='red', label="vnv (valor de la varianza del número X con respecto a n)")
+    plt.axhline(y=VARIANZA_ESPERADA, color='blue', linestyle='--', label="vve (valor de la varianza esperada)")
+    plt.title("Varianza promedio de todas las tiradas")
+    plt.xlabel("n (número de tiradas)")
+    plt.ylabel("vv (valor de la varianza)")
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+    
+    # -------------------------
+    # Muestra 5 corridas (o las que haya) aleatorias
+    # -------------------------
+    cantidad_muestra = min(5, cant_corridas) #Si el usuario pidiero <5 corridas entonces cantidad_muestra = cant_corridas (solicitadas por el usuario)
+    indices_random = random.sample(range(cant_corridas), cantidad_muestra)
+
+    plt.figure(figsize=(12, 8))
+
+    # Frecuencia
+    plt.subplot(2, 2, 1)
+    for i in indices_random:
+        plt.plot(frecuencias_por_corrida[i], label=f"Corrida {i+1}")
+    plt.axhline(y=FRECUENCIA_ESPERADA, color='black', linestyle='--', label="Esperado")
+    plt.title(f"Frecuencia particular de {cantidad_muestra} Corridas aleatorias")
+    plt.xlabel("n")
+    plt.ylabel("Frecuencia")
+    plt.legend()
+
+    # Promedio
+    plt.subplot(2, 2, 2)
+    for i in indices_random:
+        plt.plot(promedios_por_corrida[i], label=f"Corrida {i+1}")
+    plt.axhline(y=PROMEDIO_ESPERADO, color='black', linestyle='--', label="Esperado")
+    plt.title(f"Promedio particular de {cantidad_muestra} Corridas aleatorias")
+    plt.xlabel("n")
+    plt.ylabel("Promedio")
+    plt.legend()
+
+    # Desvío
+    plt.subplot(2, 2, 3)
+    for i in indices_random:
+        plt.plot(desvios_por_corrida[i], label=f"Corrida {i+1}")
+    plt.axhline(y=DESVIO_ESPERADO, color='black', linestyle='--', label="Esperado")
+    plt.title(f"Desvío particular de {cantidad_muestra} Corridas aleatorias")
+    plt.xlabel("n")
+    plt.ylabel("Desvío")
+    plt.legend()
+
+    # Varianza
+    plt.subplot(2, 2, 4)
+    for i in indices_random:
+        plt.plot(varianzas_por_corrida[i], label=f"Corrida {i+1}")
+    plt.axhline(y=VARIANZA_ESPERADA, color='black', linestyle='--', label="Esperado")
+    plt.title(f"Varianza particular de {cantidad_muestra} Corridas aleatorias")
+    plt.xlabel("n")
+    plt.ylabel("Varianza")
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+    
+    
+funcionPrincipal();
