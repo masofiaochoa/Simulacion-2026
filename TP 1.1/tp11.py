@@ -18,14 +18,16 @@ import numpy as np
 #PASAJE Y VALIDACION DE ARGUMENTOS
 #-----------------
 if len(sys.argv) != 7:
-    print("Uso: python tp11.py -c CANT_CORRIDAS -n CANT_TIRADAS -e NUMERO")
+    print("Uso: python tp11.py -c CANT_TIRADAS -n CANT_CORRIDAS -e NUMERO")
     sys.exit()
 
+# Ingreso por consola de parámetros para la simulación (cantidad de tiradas, corridas y número elegido, ejemplo
+# python programa.py -c XXX -n YYY -e ZZ).
 for i in range(len(sys.argv)):
     if sys.argv[i] == "-c":
-        cant_corridas = int(sys.argv[i + 1])
-    elif sys.argv[i] == "-n":
         cant_tiradas = int(sys.argv[i + 1])
+    elif sys.argv[i] == "-n":
+        cant_corridas = int(sys.argv[i + 1])
     elif sys.argv[i] == "-e":
         numero_elegido = int(sys.argv[i + 1])
         
