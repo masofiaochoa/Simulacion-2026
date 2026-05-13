@@ -118,7 +118,7 @@ def funcionPrincipal():
     # Frecuencia Promedio
     plt.subplot(2, 2, 1)
     plt.plot(frencuencia_promedio, color='red', label="frn (frecuencia relativa del número X con respecto a n)")
-    plt.axhline(y=FRECUENCIA_ESPERADA, color='blue', linestyle='--', label="fre (esperada)")
+    plt.axhline(y=FRECUENCIA_ESPERADA, color='black', linestyle='--', label="fre (frecuencia relativa esperada)")
     plt.title("Frecuencia relativa promedio de todas las tiradas")
     plt.xlabel("n (número de tiradas)")
     plt.ylabel("fr (frecuencia relativa)")
@@ -127,8 +127,8 @@ def funcionPrincipal():
     # Promedio Promedio
     plt.subplot(2, 2, 2)
     plt.plot(promedio_promedio, color='red', label="vpn (valor promedio de las tiradas con respecto a n)")
-    plt.axhline(y=PROMEDIO_ESPERADO, color='blue', linestyle='--', label="vpe (valor promedio esperado)")
-    plt.title("Valor promedio promediado de todas las tiradas")
+    plt.axhline(y=PROMEDIO_ESPERADO, color='black', linestyle='--', label="vpe (valor promedio esperado)")
+    plt.title("Valor promedio de todas las tiradas")
     plt.xlabel("n (número de tiradas)")
     plt.ylabel("vp (valor promedio de las tiradas)")
     plt.legend()
@@ -136,7 +136,7 @@ def funcionPrincipal():
     # Desvío Promedio
     plt.subplot(2, 2, 3)
     plt.plot(desvio_promedio, color='red', label="vd (valor del desvío del número X n)")
-    plt.axhline(y=DESVIO_ESPERADO, color='blue', linestyle='--', label="vde (valor del desvío esperado)")
+    plt.axhline(y=DESVIO_ESPERADO, color='black', linestyle='--', label="vde (valor del desvío esperado)")
     plt.title("Desvío estándar promedio de todas las tiradas")
     plt.xlabel("n (número de tiradas)")
     plt.ylabel("vd (valor del desvío)")
@@ -145,7 +145,7 @@ def funcionPrincipal():
     # Varianza Promedio
     plt.subplot(2, 2, 4)
     plt.plot(varianza_promedio, color='red', label="vnv (valor de la varianza del número X con respecto a n)")
-    plt.axhline(y=VARIANZA_ESPERADA, color='blue', linestyle='--', label="vve (valor de la varianza esperada)")
+    plt.axhline(y=VARIANZA_ESPERADA, color='black', linestyle='--', label="vve (valor de la varianza esperado)")
     plt.title("Varianza promedio de todas las tiradas")
     plt.xlabel("n (número de tiradas)")
     plt.ylabel("vv (valor de la varianza)")
@@ -165,9 +165,9 @@ def funcionPrincipal():
     # Frecuencia
     plt.subplot(2, 2, 1)
     for i in indices_random:
-        plt.plot(frecuencias_por_corrida[i], label=f"Corrida {i+1}")
-    plt.axhline(y=FRECUENCIA_ESPERADA, color='black', linestyle='--', label="Esperado")
-    plt.title(f"Frecuencia particular de {cantidad_muestra} Corridas aleatorias")
+        plt.plot(frecuencias_por_corrida[i], label=f"Frecuencia relativa corrida {i+1}")
+    plt.axhline(y=FRECUENCIA_ESPERADA, color='black', linestyle='--', label="fre (frecuencia relativa esperada)")
+    plt.title(f"Frecuencia relativa de {cantidad_muestra} corridas aleatorias")
     plt.xlabel("n")
     plt.ylabel("Frecuencia")
     plt.legend()
@@ -175,9 +175,9 @@ def funcionPrincipal():
     # Promedio
     plt.subplot(2, 2, 2)
     for i in indices_random:
-        plt.plot(promedios_por_corrida[i], label=f"Corrida {i+1}")
-    plt.axhline(y=PROMEDIO_ESPERADO, color='black', linestyle='--', label="Esperado")
-    plt.title(f"Promedio particular de {cantidad_muestra} Corridas aleatorias")
+        plt.plot(promedios_por_corrida[i], label=f"Promedio corrida {i+1}")
+    plt.axhline(y=PROMEDIO_ESPERADO, color='black', linestyle='--', label="vpe (valor promedio esperado)")
+    plt.title(f"Valor promedio de {cantidad_muestra} corridas aleatorias")
     plt.xlabel("n")
     plt.ylabel("Promedio")
     plt.legend()
@@ -185,9 +185,9 @@ def funcionPrincipal():
     # Desvío
     plt.subplot(2, 2, 3)
     for i in indices_random:
-        plt.plot(desvios_por_corrida[i], label=f"Corrida {i+1}")
-    plt.axhline(y=DESVIO_ESPERADO, color='black', linestyle='--', label="Esperado")
-    plt.title(f"Desvío particular de {cantidad_muestra} Corridas aleatorias")
+        plt.plot(desvios_por_corrida[i], label=f"Desvío estándar corrida {i+1}")
+    plt.axhline(y=DESVIO_ESPERADO, color='black', linestyle='--', label="vde (valor del desvío esperado)")
+    plt.title(f"Desvío estándar de {cantidad_muestra} corridas aleatorias")
     plt.xlabel("n")
     plt.ylabel("Desvío")
     plt.legend()
@@ -195,9 +195,9 @@ def funcionPrincipal():
     # Varianza
     plt.subplot(2, 2, 4)
     for i in indices_random:
-        plt.plot(varianzas_por_corrida[i], label=f"Corrida {i+1}")
-    plt.axhline(y=VARIANZA_ESPERADA, color='black', linestyle='--', label="Esperado")
-    plt.title(f"Varianza particular de {cantidad_muestra} Corridas aleatorias")
+        plt.plot(varianzas_por_corrida[i], label=f"Varianza corrida {i+1}")
+    plt.axhline(y=VARIANZA_ESPERADA, color='black', linestyle='--', label="vve (valor de la varianza esperado)")
+    plt.title(f"Varianza de {cantidad_muestra} corridas aleatorias")
     plt.xlabel("n")
     plt.ylabel("Varianza")
     plt.legend()
