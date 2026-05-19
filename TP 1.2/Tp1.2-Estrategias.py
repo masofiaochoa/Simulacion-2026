@@ -113,7 +113,7 @@ def grafica_resumen_frec_rel(resumenFrecRel, strategy_name):
 def graficas_muestra(balancesArray, resumenFrecRel, valoresArray,
                      cant_corridas, numero_elegido, strategy_name):
 
-    cantidad_muestra = min(5, cant_corridas)
+    cantidad_muestra = min(8, cant_corridas)
     indices_random = random.sample(range(cant_corridas), cantidad_muestra)
 
     plt.figure(figsize=(14, 10))
@@ -339,7 +339,7 @@ def simulate_game(strategy, initial_bet, cant_tiradas, cant_corridas,
     resumenFrecRel = []
     valoresArray = []
 
-    for _ in range(cant_corridas):
+    for i in range(cant_corridas):
         resultados = strategy(
             initial_bet,
             cant_tiradas,
@@ -357,10 +357,10 @@ def simulate_game(strategy, initial_bet, cant_tiradas, cant_corridas,
         valoresArray.append(valores)
         
     # no funcionan porque no tienen i definido
-    grafica_balance(balanceArray, i, strategy_name)
-    grafica_resumen_balances(balancesArray, i, strategy_name)
-    grafica_frec_numero(valores, numero_elegido, i, strategy_name)
-    grafica_frec_rel(frecRelPorTiradaArray, i, numero_elegido, strategy_name)
+    #grafica_balance(balanceArray, i, strategy_name)
+    #grafica_resumen_balances(balancesArray, i, strategy_name)
+    #grafica_frec_numero(valores, numero_elegido, i, strategy_name)
+    #grafica_frec_rel(frecRelPorTiradaArray, i, numero_elegido, strategy_name)
 
     grafica_resumen_frec_rel(resumenFrecRel,  strategy_name)
     graficas_muestra(
