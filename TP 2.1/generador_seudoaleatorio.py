@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import random
 import os
+from math import sqrt, erfc
+from scipy.fftpack import fft
+from scipy.stats import chisquare
+from collections import Counter
 
 # ==========================================
 # 1. CREACIÓN DE LA CARPETA
@@ -44,30 +48,134 @@ def xorshift(seed, n):
     return results
 
 # ==========================================
-# 3. PRUEBAS
+# 3. Pruebas estadísticas basadas en NIST SP800-22 -> Obtenidas de: https://www.random.org/analysis/
 # ==========================================
+
+#No es una prueba como tal sino un helper para los tests
+#Convierte valores sobre la media (0.5) a 1 y valores debajo de la media a 0
+def valores_a_bits(valores):
+    return ''.join('1' if v >= 0.5 else '0' for v in valores)
+
+# Test Monobit:
+# Verifica que la cantidad de bits 0 y 1 sea aproximadamente la misma. (Por arriba y por debajo de la media)
+def frequency_monobit_test(bitstring):
+    n = len(bitstring)
+
+    ones = bitstring.count('1')
+    zeros = bitstring.count('0')
+
+    s = abs(ones - zeros)
+
+    test_stat = s / sqrt(n)
+
+    p = erfc(test_stat / sqrt(2))
+
+    return float(p)
+
+# Test Runs:
+# Evalúa si las secuencias consecutivas de 0s y 1s tienen una longitud y frecuencia esperadas.
+def runs_test(bitstring):
+    n = len(bitstring)
+
+    if n < 100:
+        return 0.0
+
+    pi = bitstring.count('1') / n
+
+    tau = 2 / sqrt(n)
+
+    if abs(pi - 0.5) >= tau:
+        return 0.0
+
+    V_n = 1 + sum(
+        bitstring[i] != bitstring[i - 1]
+        for i in range(1, n)
+    )
+
+    numerator = abs(
+        V_n - 2 * n * pi * (1 - pi)
+    )
+
+    denominator = (
+        2 * sqrt(2 * n) * pi * (1 - pi)
+    )
+
+    if denominator == 0:
+        return 0.0
+
+    p = erfc(numerator / denominator)
+
+    return float(p)
+
+# Test Serial:
+# Comprueba que los pares de bits (00, 01, 10 y 11) aparezcan con frecuencias similares.
+def serial_test(bitstring):
+
+    pairs = [
+        bitstring[i:i+2]
+        for i in range(0, len(bitstring)-1, 2)
+    ]
+
+    freq = Counter(pairs)
+
+    values = [
+        freq.get(pair, 0)
+        for pair in ['00', '01', '10', '11']
+    ]
+
+    expected = [len(pairs)/4] * 4
+
+    stat, p = chisquare(
+        values,
+        f_exp=expected
+    )
+
+    return float(p)
+
+# Test Spectral:
+# Detecta patrones periódicos o repeticiones utilizando la Transformada Rápida de Fourier (FFT).
+def spectral_test(bitstring):
+
+    n = len(bitstring)
+
+    X = np.array([
+        2 * int(b) - 1
+        for b in bitstring
+    ])
+
+    S = fft(X)
+
+    M = np.abs(S[:n // 2])
+
+    T = np.sqrt(
+        np.log(1 / 0.05) * n
+    )
+
+    N0 = 0.95 * n / 2
+
+    N1 = np.sum(M < T)
+
+    d = (
+        (N1 - N0)
+        /
+        np.sqrt(
+            n * 0.95 * 0.05 / 4
+        )
+    )
+
+    p = erfc(
+        np.abs(d) / np.sqrt(2)
+    )
+
+    return float(p)
+
+# Test de Frecuencia (Chi-cuadrado):
+# Verifica si los números generados se distribuyen uniformemente en el intervalo [0,1).
 def test_frecuencia(valores, bins=10):
     counts, _ = np.histogram(valores, bins=bins, range=(0.0, 1.0))
     esperado = len(valores) / bins
     chi2 = sum((o - esperado) ** 2 / esperado for o in counts)
     return chi2, counts
-
-def test_autocorrelacion(valores, lag=1):
-    n = len(valores)
-    mean = np.mean(valores)
-    num = sum((valores[i] - mean)*(valores[i + lag] - mean) for i in range(n - lag))
-    den = sum((valores[i] - mean)**2 for i in range(n))
-    return num / den if den != 0 else 0
-
-def test_corridas(valores):
-    runs = 1
-    for i in range(1, len(valores)):
-        if (valores[i] > valores[i - 1]) != (valores[i - 1] > valores[i - 2] if i > 1 else True):
-            runs += 1
-    return runs
-
-def test_media(valores):
-    return np.mean(valores)
 
 # ==========================================
 # 4. EJECUCIÓN
@@ -86,7 +194,7 @@ df = pd.DataFrame({
     "XorShift": xorshift_vals,
     "Python": python_vals
 })
-
+"""
 tests = {}
 for name in df.columns:
     vals = df[name]
@@ -95,6 +203,21 @@ for name in df.columns:
         "Autocorrelación": test_autocorrelacion(vals),
         "Corridas": test_corridas(vals),
         "Chi2 (Frecuencia)": test_frecuencia(vals)[0]
+    }
+"""
+tests = {}
+for name in df.columns:
+    vals = df[name]
+    bits = valores_a_bits(vals)
+
+    chi2, _ = test_frecuencia(vals)
+
+    tests[name] = {
+        "Chi2": chi2,
+        "Monobit p": frequency_monobit_test(bits),
+        "Runs p": runs_test(bits),
+        "Serial p": serial_test(bits),
+        "Spectral p": spectral_test(bits)
     }
 
 resultados_df = pd.DataFrame(tests).T
