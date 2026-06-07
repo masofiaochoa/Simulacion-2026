@@ -1,0 +1,382 @@
+\documentclass{article}
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{fancyhdr}       % para el encabezado
+\usepackage[spanish]{babel} % para que esté en español
+\usepackage{float}          % para imagenes
+\usepackage{amsmath}        % símbolos matemáticos avanzados
+\usepackage{listings}       % para código fuente
+\usepackage{xcolor}         % colores para listings
+
+\graphicspath{ {./images/} }
+
+% Configuración de colores para listings
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{TP 2.2 - Generadores de números pseudoaleatorios de distintas distribuciones de probabilidad.}
+
+\author{
+  Juan Pedro Casañas \\
+  Universidad Tecnológica Nacional - UTNFRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Ingenieria en Sistemas de Información \\
+  Legajo: \textbf{50373}\\
+  \texttt{juan.pedro.casanas99@gmail.com} \\
+   \And
+  Maria Sofia Ochoa \\
+  Universidad Tecnológica Nacional - UTNFRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Ingenieria en Sistemas de Información \\
+  Legajo: \textbf{50452}\\
+  \texttt{masofiaochoa@gmail.com} \\
+  \And
+  Maria Paz Battistoni \\
+  Universidad Tecnológica Nacional - UTNFRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Ingenieria en Sistemas de Información \\
+  Legajo: \textbf{49641}\\
+  \texttt{battistonimpaz@gmail.com} \\
+  \And
+  Bautista Alfaro \\
+  Universidad Tecnológica Nacional - UTNFRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Ingenieria en Sistemas de Información \\
+  Legajo: \textbf{47881}\\
+  \texttt{bautistaalfaro2001@gmail.com} \\
+}
+
+\begin{document}
+\maketitle 
+
+% ENCABEZADO
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{TP 2.2 - Generadores de números pseudoaleatorios de distintas distribuciones.}
+\fancyhead[R]{\today}
+\fancyfoot[C]{\thepage}
+
+\begin{abstract} %ABSTRACT
+Este trabajo detalla la investigación, el desarrollo matemático y la validación computacional en Python de algoritmos para generar variables aleatorias continuas y discretas a partir de números pseudoaleatorios uniformemente distribuidos $U(0,1)$. Siguiendo las directrices del clásico texto de Thomas H. Naylor, se diseñaron e implementaron generadores basados en los métodos de la \textbf{Transformada Inversa} (para las 9 distribuciones bajo estudio) y de \textbf{Aceptación y Rechazo} (para Uniforme, Exponencial y Normal). Adicionalmente, se integró el generador customizado XorShift y GCL desarrollado en el TP 2.1 como la fuente primaria de aleatoriedad. La validación se llevó a cabo mediante simulación empírica de 5000 muestras y su correspondiente contraste gráfico frente a las densidades teóricas.
+\end{abstract}
+
+\noindent\textbf{Palabras clave: } Simulación · Trabajo práctico · Variables aleatorias · Transformada Inversa · Rechazo · Naylor
+
+% Introducccion
+\newpage
+\section{Introducción}
+\paragraph{}
+La modelación estocástica mediante computadoras constituye una de las herramientas fundamentales en la simulación de sistemas del mundo real. Para que un modelo imite fielmente la dinámica de sistemas con incertidumbre (como tasas de arribos de clientes, tiempos de falla de maquinarias, o variabilidad en mercados financieros), es necesario disponer de muestras aleatorias que sigan comportamientos probabilísticos específicos.
+
+\paragraph{}
+Dado que los generadores pseudoaleatorios convencionales (como los implementados y testeados en el TP 2.1) proveen únicamente valores uniformes en el intervalo $(0,1)$, surge la necesidad de aplicar transformaciones matemáticas que conviertan este flujo de entrada uniforme en variables aleatorias continuas o discretas correspondientes a cualquier distribución de interés.
+
+\paragraph{}
+En este marco, el presente trabajo práctico tiene por objetivo construir, analizar y validar generadores de variables aleatorias siguiendo las técnicas sugeridas por la bibliografía clásica de la materia, particularmente el capítulo 4 de \textit{Técnicas de simulación en computadoras} de Thomas H. Naylor. 
+
+\paragraph{}
+De acuerdo a las especificaciones dadas por la cátedra, implementamos el método de la Transformada Inversa para las nueve distribuciones de probabilidad bajo análisis: Uniforme, Exponencial, Gamma, Normal, Pascal, Binomial, Hipergeométrica, Poisson y Empírica Discreta. Asimismo, implementamos el método de Aceptación y Rechazo para las distribuciones Uniforme, Exponencial y Normal. El comportamiento empírico de las muestras generadas se contrasta con las funciones teóricas correspondientes y se analiza el rendimiento de los generadores.
+
+%% marco teorico
+\newpage
+\section{Marco teórico}
+\label{sec:headings}
+A continuación, se describen los fundamentos matemáticos de los métodos de generación implementados.
+
+\subsection{Método de la Transformada Inversa}
+\paragraph{}
+Este método se fundamenta en el Teorema de la Transformación Integral de la Probabilidad. Si $X$ es una variable aleatoria continua con Función de Distribución Acumulada (FDA) $F(x) = P(X \le x)$ continua y estrictamente creciente, entonces la variable aleatoria $U = F(X)$ sigue una distribución uniforme en el intervalo $(0,1)$.
+
+\paragraph{}
+En consecuencia, podemos generar muestras de la variable $X$ generando primero un número pseudoaleatorio $U \sim U(0,1)$ y aplicando luego la función inversa de la FDA:
+\begin{equation}
+X = F^{-1}(U)
+\end{equation}
+
+\paragraph{}
+Para variables aleatorias discretas, donde la FDA $F(x)$ es una función escalonada, el método se adapta buscando el menor valor entero $k$ que satisfaga la condición de superación del umbral uniforme $U$:
+\begin{equation}
+F(k) = \sum_{i=x_{\min}}^{k} P(X = i) \ge U
+\end{equation}
+El algoritmo genera $U \sim U(0,1)$ y acumula secuencialmente los valores de la Función de Probabilidad de Masa (PMF) hasta que la suma acumulada alcance o supere a $U$.
+
+\subsection{Método de Aceptación y Rechazo}
+\paragraph{}
+El método de Aceptación y Rechazo es una alternativa eficaz cuando no es posible hallar la inversa analítica $F^{-1}(U)$ o cuando su cálculo computacional resulta ineficiente. Consiste en envolver la función de densidad objetivo $f(x)$ mediante una función de densidad propuesta $g(x)$ (fácil de generar) escalada por una constante $c > 1$, de modo que:
+\begin{equation}
+f(x) \le c \cdot g(x) \quad \forall x
+\end{equation}
+La probabilidad de aceptación de un candidato en cada intento es de $1/c$, por lo que la constante $c$ debe minimizarse para optimizar el rendimiento del algoritmo. El procedimiento general es:
+\begin{enumerate}
+    \item Generar un candidato $Y$ a partir de la distribución propuesta $g(y)$.
+    \item Generar un número uniforme independiente $U \sim U(0,1)$.
+    \item Si $U \le \frac{f(Y)}{c \cdot g(Y)}$, se acepta el candidato y se asigna $X = Y$; de lo contrario, se rechaza y se regresa al paso 1.
+\end{enumerate}
+
+\newpage
+\subsection{Desarrollo Matemático por Distribución}
+A continuación se detalla la deducción de las expresiones matemáticas empleadas en el código:
+
+\begin{enumerate}
+    \item \textbf{Distribución Uniforme (continua)}
+    La FDP en el rango $[a, b]$ es $f(x) = \frac{1}{b-a}$. Integrando, la FDA es:
+    \begin{equation}
+    F(x) = \frac{x-a}{b-a}
+    \end{equation}
+    Igualando $F(x) = U$ y despejando obtenemos la expresión de la \textbf{Transformada Inversa}:
+    \begin{equation}
+    x = a + (b-a)U
+    \end{equation}
+    Para el \textbf{Método de Rechazo}, se propone como envolvente $Y \sim U(a - d, b + d)$ donde $d = 0.5(b-a)$. El candidato se genera mediante transformada inversa en el intervalo extendido y se acepta si cae en el dominio real $[a, b]$, lo cual simplifica a la condición $a \le Y \le b$.
+
+    \item \textbf{Distribución Exponencial (continua)}
+    La FDP es $f(x) = \lambda e^{-\lambda x}$ para $x \ge 0$. Su FDA es $F(x) = 1 - e^{-\lambda x}$. Igualando a $U$:
+    \begin{equation}
+    1 - e^{-\lambda x} = U \implies e^{-\lambda x} = 1 - U \implies x = -\frac{1}{\lambda} \ln(1-U)
+    \end{equation}
+    Como $1-U$ se distribuye igual que $U$ en $(0,1)$, la ecuación de la \textbf{Transformada Inversa} es:
+    \begin{equation}
+    x = -\frac{1}{\lambda} \ln(U)
+    \end{equation}
+    Para el \textbf{Método de Rechazo}, se propone una variable uniforme acotada $Y \sim U(0, M)$ con $M = 10/\lambda$. El criterio de aceptación para el candidato es $U_2 \le e^{-\lambda Y}$.
+
+    \item \textbf{Distribución Gamma (continua)}
+    Al no existir una expresión analítica elemental para la inversa de la FDA de la distribución Gamma con parámetros $k$ y $\theta$, la \textbf{Transformada Inversa} se computa por aproximación numérica mediante la función cuantil provista por `scipy.stats.gamma.ppf(u, a=k, scale=theta)`.
+
+    \item \textbf{Distribución Normal (continua)}
+    Para la \textbf{Transformada Inversa}, empleamos la transformación directa de Box-Muller, que toma un par $U_1, U_2 \sim U(0,1)$ y las mapea analíticamente en una distribución normal estándar:
+    \begin{equation}
+    Z = \sqrt{-2\ln(U_1)} \cos(2\pi U_2) \implies X = mu + sigma \cdot Z
+    \end{equation}
+    Para el \textbf{Método de Rechazo}, utilizamos como propuesta una distribución Laplace (doble exponencial) $Y \sim \text{Laplace}(0,1)$ generada a partir de una variable exponencial con signo aleatorio. Aceptamos el candidato si:
+    \begin{equation}
+    U_3 \le e^{-\frac{(|Y| - 1)^2}{2}}
+    \end{equation}
+
+    \item \textbf{Distribución Pascal (discreta)}
+    Modela fracasos antes de $r$ éxitos. La PMF es $P(X = k) = \binom{k+r-1}{k} p^r (1-p)^k$. Se genera mediante la acumulación discreta de las probabilidades hasta superar $U$.
+
+    \item \textbf{Distribución Binomial (discreta)}
+    Modela aciertos en $n$ ensayos. Invertimos acumulando $P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}$.
+
+    \item \textbf{Distribución Hipergeométrica (discreta)}
+    Modela extracción sin reemplazo. Se invierte acumulando su PMF a partir del valor mínimo $k_{\min} = \max(0, n - (N - K))$.
+
+    \item \textbf{Distribución Poisson (discreta)}
+    Invertimos acumulando la masa $P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}$ a partir de $k = 0$.
+
+    \item \textbf{Distribución Empírica Discreta (discreta)}
+    Dada la lista de valores y sus probabilidades directas, sumamos ordenadamente sus probabilidades hasta superar $U$ y se retorna el valor correspondiente.
+\end{enumerate}
+
+\newpage
+%% Metolodogia
+\section{Metodología}
+\paragraph{}
+Para la resolución de este trabajo práctico se reestructuró la simulación de números pseudoaleatorios del TP 2.1, organizando el código en módulos enfocados para facilitar la modularidad e integración del generador propio.
+
+\paragraph{}
+La estructura del proyecto en la carpeta \texttt{TP 2.2} se describe a continuación:
+\begin{itemize}
+    \item \texttt{base\_generator.py}: Módulo encargado de proveer el número uniforme $U(0,1)$ a través de la función \texttt{generar\_U01()}. Permite conmutar la fuente de aleatoriedad entre el módulo \texttt{random} de Python, el método de congruencia lineal (\texttt{gcl}) o el algoritmo \texttt{xorshift} del TP 2.1.
+    \item \texttt{config.py}: Almacena los parámetros generales de la simulación, incluyendo la cantidad total de muestras por distribución y la opción de configuración del generador base.
+    \item \texttt{probability\_functions.py}: Contiene las definiciones de las FDP y PMF teóricas necesarias para la validación numérica y las búsquedas discretas.
+    \item \texttt{inverse\_transform\_generators.py}: Implementa las funciones correspondientes al método de Transformada Inversa para las 9 distribuciones.
+    \item \texttt{rejection\_method\_generators.py}: Implementa el método de Rechazo para las distribuciones Uniforme, Exponencial y Normal utilizando el generador propio para toda su lógica.
+    \item \texttt{plotter.py}: Módulo encargado de recopilar las muestras, realizar la discretización para el histograma de frecuencias relativas, graficar la función teórica superpuesta y guardar los resultados.
+    \item \texttt{main.py}: Script de ejecución principal que realiza las simulaciones y exporta los resultados gráficos a la carpeta \texttt{graficas/}.
+\end{itemize}
+
+\subsection{Inserción de Código en el Informe}
+A continuación, se muestra la implementación de los generadores principales para la distribución Uniforme y la distribución Normal (Box-Muller e inversión), los cuales ilustran la correcta aplicación de ambos enfoques metodológicos.
+
+\begin{lstlisting}[language=Python, caption=Implementación de los generadores por Transformada Inversa]
+# Muestra de inverse_transform_generators.py para Uniforme y Normal
+def generar_uniforme(a, b):
+    if a >= b:
+        raise ValueError("El parametro 'a' debe ser menor que 'b'.")
+    u = generar_U01()
+    return a + (b - a) * u
+
+def generar_normal(mu, sigma):
+    if sigma < 0:
+        raise ValueError("Sigma debe ser no negativa.")
+    if sigma == 0:
+        return mu
+    u = generar_U01()
+    z0 = norm.ppf(u)
+    return mu + sigma * z0
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=Implementación de los generadores por Aceptación y Rechazo]
+# Muestra de rejection_method_generators.py para Uniforme y Normal
+def generar_uniforme_rechazo(a, b):
+    if a >= b:
+        raise ValueError("El parametro 'a' debe ser menor que 'b'.")
+    d = (b - a) * 0.5
+    rango_propuesto = 2 * d + (b - a)
+    min_propuesto = a - d
+    while True:
+        u1 = generar_U01()
+        y_candidato = min_propuesto + rango_propuesto * u1
+        if a <= y_candidato <= b:
+            return y_candidato
+
+def generar_normal_rechazo(mu, sigma):
+    if sigma < 0:
+        raise ValueError("Sigma debe ser no negativa.")
+    if sigma == 0:
+        return mu
+    while True:
+        u1 = generar_U01()
+        while u1 == 0:
+            u1 = generar_U01()
+        E = -math.log(u1)
+        u2 = generar_U01()
+        signo = 1 if u2 >= 0.5 else -1
+        y_candidato = signo * E
+        u3 = generar_U01()
+        if u3 <= math.exp(-((E - 1) ** 2) / 2.0):
+            return mu + sigma * y_candidato
+\end{lstlisting}
+
+\newpage
+\section{Resultados}
+A continuación se presentan los resultados visuales de la validación empírica. Se generaron muestras de tamaño $N = 5000$ utilizando el algoritmo \texttt{XorShift} configurado como generador base. Las imágenes muestran la frecuencia relativa observada (barras celestes) contra la densidad teórica esperada (línea roja para continuas o puntos rojos para discretas).
+
+\subsection{Resultados para Distribución Uniforme}
+Se simularon las variables en el rango $[2, 10]$.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Uniforme_2_10_tinversa.png}
+    \caption{Distribución Uniforme mediante el método de Transformada Inversa.}
+    \label{fig:uni_inv}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Uniforme_2_10_rechazo.png}
+    \caption{Distribución Uniforme mediante el método de Aceptación y Rechazo.}
+    \label{fig:uni_rech}
+\end{figure}
+
+\newpage
+\subsection{Resultados para Distribución Exponencial}
+Se simularon las variables utilizando un parámetro de tasa $\lambda = 0.5$.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Exponencial_0.5_tinversa.png}
+    \caption{Distribución Exponencial mediante el método de Transformada Inversa.}
+    \label{fig:exp_inv}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Exponencial_0.5_rechazo.png}
+    \caption{Distribución Exponencial mediante el método de Aceptación y Rechazo.}
+    \label{fig:exp_rech}
+\end{figure}
+
+\newpage
+\subsection{Resultados para Distribución Normal}
+Se simularon las variables utilizando parámetros de media $\mu = 5$ y desviación estándar $\sigma = 2$.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Normal_5_2_tinversa.png}
+    \caption{Distribución Normal mediante el método de Transformada Inversa.}
+    \label{fig:norm_inv}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Normal_5_2_rechazo.png}
+    \caption{Distribución Normal mediante el método de Aceptación y Rechazo.}
+    \label{fig:norm_rech}
+\end{figure}
+
+\newpage
+\subsection{Resultados para Distribuciones Discretas}
+A continuación se exhibe el testeo de las distribuciones discreta Binomial ($n=25, p=0.25$), Poisson ($\lambda=8.0$) y Empírica Discreta (valores $[1..6]$ con probabilidades $[0.1, 0.1, 0.3, 0.2, 0.15, 0.15]$) simuladas por Transformada Inversa.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Binomial_25_0.25_tinversa.png}
+    \caption{Distribución Binomial por el método de la Transformada Inversa.}
+    \label{fig:bin_inv}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Poisson_8.0_tinversa.png}
+    \caption{Distribución de Poisson por el método de la Transformada Inversa.}
+    \label{fig:poi_inv}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Empirica_Discreta_1_2_3_4_5_6_0.1_0.1_0.3_0.2_0.15_0.15_tinversa.png}
+    \caption{Distribución Empírica Discreta por el método de la Transformada Inversa.}
+    \label{fig:emp_inv}
+\end{figure}
+
+\newpage
+\section{Discusión y Conclusiones}
+\paragraph{}
+La validación experimental de los generadores evidencia la exactitud de los métodos probabilísticos implementados. En todos los casos testeados se puede apreciar visualmente cómo la frecuencia relativa empírica se amolda perfectamente a las curvas teóricas correspondientes, lo cual verifica que las muestras generadas siguen en efecto las leyes de distribución correspondientes.
+
+\paragraph{}
+La elección del método adecuado para generar variables aleatorias representa un compromiso de diseño computacional. El método de la Transformada Inversa es sumamente eficiente y elegante, pues requiere exactamente de un número pseudoaleatorio $U(0,1)$ por muestra y aprovecha el mapeo FDA continuo de la variable. Su única desventaja es que requiere conocer explícitamente $F^{-1}(u)$, lo que resulta inviable de forma analítica en distribuciones complejas como la Normal o la Gamma. Para solventar esto en distribuciones continuas, se utilizan aproximaciones precisas como el método analítico Box-Muller o funciones numéricas de bibliotecas especializadas. En el caso discreto (Poisson, Binomial), se implementó de forma óptima mediante iteraciones acumuladas.
+
+\paragraph{}
+Por su parte, el método de Aceptación y Rechazo demostró ser muy flexible al evitar la necesidad de resolver la integral acumulada, pero introduce una penalización en el costo computacional. Al requerir múltiples intentos (generando en cada paso un candidato $Y$ y un valor de aceptación $U_2$), la velocidad del algoritmo depende estrictamente de la proximidad de la envolvente $c \cdot g(x)$ respecto a $f(x)$. En distribuciones complejas, esto puede representar una pérdida de eficiencia considerable si la tasa de aceptación $1/c$ es muy baja.
+
+\paragraph{}
+Se verifica asimismo que el uso de generadores a medida (como XorShift) como base aleatoria en \texttt{base\_generator.py} asegura la estabilidad y la calidad probabilística del flujo de entrada de las variables, demostrando que la simulación es robusta e independiente del motor de números aleatorios incorporado por defecto en Python.
+
+\begin{thebibliography}{6}
+
+\bibitem{utn1}
+UTN-FRRo. \textit{Variables aleatorias discretas}. En Probabilidad y Estadística, ISI. Universidad Tecnológica Nacional, Facultad Regional Rosario, 2023.
+
+\bibitem{utn2}
+UTN-FRRo. \textit{Variables aleatorias continuas}. En Probabilidad y Estadística, ISI. Universidad Tecnológica Nacional, Facultad Regional Rosario, 2023.
+
+\bibitem{naylor}
+Naylor, T.H., Balintfy, J.L., Burdick, D.S., Chu, K. (1982). \textit{Técnicas de simulación en computadoras}. Editorial Limusa.
+
+\end{thebibliography}
+
+\end{document}

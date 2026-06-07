@@ -146,5 +146,15 @@ def testear_distribucion(
     plt.legend()
     plt.grid(True, linestyle="--", alpha=0.7)
     os.makedirs("graficas", exist_ok=True)
-    nombre_archivo = f"graficas/{nombre_dist}_{'_'.join(map(str, params_dist))}_{'rechazo' if usa_rechazo else 'tinversa'}.png"
-    plt.savefig(nombre_archivo)
+    # Sanitizar el nombre de la distribución para que sea un nombre de archivo seguro
+    nombre_seguro = nombre_dist.replace(" ", "_").replace("í", "i").replace("é", "e").replace("á", "a").replace("ó", "o").replace("ú", "u").replace("(", "").replace(")", "")
+    
+    # Sanitizar cada parámetro convirtiendo listas en cadenas simples separadas por guión bajo
+    params_str = []
+    for p in params_dist:
+        p_str = str(p).replace(" ", "").replace("[", "").replace("]", "").replace(",", "_").replace("(", "").replace(")", "").replace("'", "")
+        p_str = p_str.replace("í", "i").replace("é", "e").replace("á", "a").replace("ó", "o").replace("ú", "u")
+        params_str.append(p_str)
+        
+    nombre_archivo = f"graficas/{nombre_seguro}_{'_'.join(params_str)}_{'rechazo' if usa_rechazo else 'tinversa'}.png"
+    plt.savefig(nombre_archivo)
