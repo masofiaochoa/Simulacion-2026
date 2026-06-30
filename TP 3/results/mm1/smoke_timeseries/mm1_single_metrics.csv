@@ -1,0 +1,2 @@
+semilla,tasa_arribo,tasa_servicio,rho,tiempo_simulacion,capacidad_cola,clientes_generados,clientes_aceptados,clientes_rechazados,clientes_atendidos,promedio_clientes_sistema,promedio_clientes_cola,tiempo_promedio_sistema,tiempo_promedio_cola,utilizacion_servidor,probabilidad_denegacion
+20260626,7.5,10.0,0.75,100.0,infinita,735,735,0,733,2.174178077219386,1.4705452919844115,0.2962723905912875,0.2003123955887743,0.7036327852349714,0.0

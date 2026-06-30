@@ -1,0 +1,20 @@
+% Generado desde results/inventory/experiments/inventario_resumen.csv
+\begin{table}[htbp]
+\centering
+\caption{Comparacion contra una referencia esperada simplificada de inventario.}
+\label{tab:inventario-comparacion-esperada}
+\begin{tabular}{lrrrrr}
+\toprule
+Politica & Costo esp. & Python & Dif. \% & Faltantes esp. & Faltantes Python \\
+\midrule
+\texttt{bajo\_inventario} & 27052.20 & 17998.25 & -33.47 & 1374.02 & 485.80 \\
+\texttt{balanceada} & 16434.40 & 16304.39 & -0.79 & 23.99 & 2.70 \\
+\texttt{alto\_servicio} & 20166.26 & 20235.96 & 0.35 & 0.00 & 0.00 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+\begin{minipage}{0.95\linewidth}
+\centering\footnotesize
+La referencia usa demanda media, ciclos esperados $D/Q$, inventario medio $Q/2+\max(r-\lambda_D L,0)$ y faltante esperado $E[(D_L-r)^+]$ con $D_L\sim Poisson(\lambda_D L)$.
+\end{minipage}
+\end{table}

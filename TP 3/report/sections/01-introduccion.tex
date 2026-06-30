@@ -1,0 +1,9 @@
+\section{Introduccion}
+
+El trabajo practico estudia sistemas mediante simulacion computacional y comparacion con resultados teoricos o esperados cuando estos existen. Los modelos analizados son una cola M/M/1, implementada mediante una simulacion de eventos discretos en Python, y un sistema de inventario con politica de revision continua $(Q,r)$, simulado por periodos diarios.
+
+Para el modelo de colas se busca observar como cambia la congestion al variar la relacion entre tasa de arribo y tasa de servicio. Ademas, se analizan colas con capacidad finita para medir la probabilidad de denegacion de servicio cuando el sistema no puede aceptar nuevos clientes.
+
+Los parametros principales se leen desde \texttt{config/default\_parameters.json}, lo que permite modificar la configuracion experimental sin cambiar el codigo fuente.
+
+La implementacion en AnyLogic se esta desarrollando en paralelo y se incorporara manualmente al informe final cuando existan resultados exportados comparables.

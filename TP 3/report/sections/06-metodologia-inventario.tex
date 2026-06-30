@@ -1,0 +1,46 @@
+\section{Metodologia del modelo de inventario}
+
+La simulacion se implemento por periodos diarios, usando un horizonte de $365$ dias y $10$ replicas independientes por politica. La semilla base fue $20260626$ y las semillas de cada replica se derivaron de esa base para conservar reproducibilidad.
+
+Los parametros comunes fueron:
+
+\begin{itemize}
+    \item Demanda diaria: Poisson con media de $20$ unidades por dia.
+    \item Inventario inicial: $120$ unidades.
+    \item Tiempo de entrega: $3$ dias.
+    \item Costo fijo de orden: $120$.
+    \item Costo de mantenimiento: $0.35$ por unidad por dia.
+    \item Costo de faltante: $8$ por unidad faltante.
+\end{itemize}
+
+Se compararon tres politicas:
+
+\begin{center}
+\begin{tabular}{lrrl}
+\toprule
+Politica & $Q$ & $r$ & Interpretacion \\
+\midrule
+\texttt{bajo\_inventario} & 80 & 45 & Menor inventario promedio, mayor riesgo de faltantes \\
+\texttt{balanceada} & 120 & 70 & Punto medio entre mantenimiento y faltantes \\
+\texttt{alto\_servicio} & 160 & 95 & Mayor nivel de servicio, mayor mantenimiento \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+En cada dia simulado se aplico la siguiente secuencia:
+
+\begin{enumerate}
+    \item Recibir ordenes pendientes cuyo dia de llegada sea el dia actual.
+    \item Generar la demanda diaria.
+    \item Satisfacer la demanda hasta agotar el inventario disponible.
+    \item Registrar unidades faltantes cuando la demanda supera al inventario.
+    \item Acumular costo de mantenimiento y costo de faltante.
+    \item Calcular la posicion de inventario.
+    \item Emitir una orden de cantidad $Q$ si la posicion es menor o igual que $r$.
+    \item Acumular el costo fijo de orden y registrar el estado diario.
+\end{enumerate}
+
+El tratamiento de faltantes fue de ventas perdidas. Por lo tanto, una unidad no satisfecha se contabiliza como faltante y genera costo, pero no se arrastra como pedido pendiente al dia siguiente. Esta decision mantiene el modelo simple y consistente con la comparacion de politicas de servicio.
+
+Las salidas de Python se guardaron en \texttt{results/inventory/experiments/}. El archivo \texttt{inventario\_corridas.csv} contiene una fila por replica, \texttt{inventario\_resumen.csv} resume cada politica y \texttt{inventario\_series.csv} conserva la evolucion diaria usada para los graficos.
+

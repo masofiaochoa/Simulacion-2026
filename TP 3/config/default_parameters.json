@@ -1,0 +1,43 @@
+{
+  "mm1": {
+    "time_unit": "horas",
+    "service_rate": 10.0,
+    "arrival_rate_factors": [0.25, 0.5, 0.75, 1.0, 1.25],
+    "queue_capacities": [null, 0, 2, 5, 10, 50],
+    "simulation_time": 10000.0,
+    "replications": 10,
+    "base_seed": 20260626,
+    "max_queue_probability_length": 20
+  },
+  "inventory": {
+    "time_unit": "dias",
+    "policy": "revision continua (Q, r)",
+    "horizon_days": 365,
+    "replications": 10,
+    "base_seed": 20260626,
+    "demand_distribution": "Poisson",
+    "mean_daily_demand": 20.0,
+    "lead_time_days": 3,
+    "initial_inventory": 120,
+    "order_cost": 120.0,
+    "holding_cost_per_unit_day": 0.35,
+    "shortage_cost_per_unit": 8.0,
+    "policies": [
+      {
+        "name": "bajo_inventario",
+        "order_quantity": 80,
+        "reorder_point": 45
+      },
+      {
+        "name": "balanceada",
+        "order_quantity": 120,
+        "reorder_point": 70
+      },
+      {
+        "name": "alto_servicio",
+        "order_quantity": 160,
+        "reorder_point": 95
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+\section{Marco teorico del modelo de inventario}
+
+El segundo modelo del trabajo practico representa un sistema de inventario con revision continua y politica $(Q,r)$. La variable principal es el inventario disponible $I_d$ al final del dia $d$. La politica queda definida por dos parametros: $Q$, cantidad fija a ordenar, y $r$, punto de reorden. Cuando la posicion de inventario cae a $r$ o menos, se emite una orden por $Q$ unidades.
+
+La posicion de inventario se calcula como
+\[
+    PI_d = I_d + O_d,
+\]
+donde $O_d$ es la cantidad total pendiente de recepcion al momento de revisar la politica. Como en este modelo se adoptan ventas perdidas, la demanda no satisfecha no queda pendiente para dias posteriores. Por ese motivo no se resta una cartera de pedidos atrasados en la posicion de inventario.
+
+La demanda diaria se modela como una variable aleatoria de Poisson:
+\[
+    D_d \sim \mathrm{Poisson}(\lambda_D),
+\]
+donde $\lambda_D$ representa la demanda media diaria. La demanda satisfecha del dia es $\min(I_d, D_d)$ y las unidades faltantes son la diferencia positiva entre demanda e inventario disponible.
+
+El costo total de una corrida combina tres componentes:
+\[
+    C = K N + h \sum_{d=1}^{T} I_d + p \sum_{d=1}^{T} F_d,
+\]
+donde $K$ es el costo fijo de emitir una orden, $N$ es la cantidad de ordenes emitidas, $h$ es el costo de mantenimiento por unidad y por dia, $T$ es el horizonte de simulacion, $p$ es el costo por unidad faltante y $F_d$ son las unidades faltantes del dia $d$.
+
+La medida de servicio usada en los resultados es
+\[
+    \text{nivel de servicio} =
+    \frac{\text{demanda satisfecha}}{\text{demanda total}}.
+\]
+Esta metrica resume que proporcion de la demanda pudo atenderse directamente desde inventario disponible.
+
+\subsection{Referencia esperada simplificada}
+
+El modelo de inventario con demanda Poisson diaria, tiempo de entrega y ventas perdidas no tiene una expresion cerrada unica tan directa como el modelo M/M/1. Para contar con una referencia teorica esperada de comparacion, se usa una aproximacion clasica por ciclos de reposicion.
+
+Sea $\lambda_D$ la demanda media diaria, $T$ el horizonte, $L_e$ el tiempo de entrega, $K_o$ el costo fijo de ordenar, $h$ el costo de mantenimiento y $p$ el costo de faltante. La demanda esperada del horizonte es
+\[
+    D_T = \lambda_D T,
+\]
+y la cantidad esperada de ciclos de reposicion se aproxima por
+\[
+    N_Q = \frac{D_T}{Q}.
+\]
+
+El inventario promedio esperado se aproxima mediante stock de ciclo mas stock de seguridad:
+\[
+    \bar I_{\mathrm{esp}} =
+    \frac{Q}{2} + \max(r-\lambda_D L_e,0).
+\]
+
+Para medir el riesgo de faltantes durante el tiempo de entrega se define
+\[
+    D_{L_e} \sim \mathrm{Poisson}(\lambda_D L_e)
+\]
+y se estima el faltante esperado por ciclo como
+\[
+    E[(D_{L_e}-r)^+].
+\]
+Por lo tanto, el costo esperado simplificado usado como referencia es
+\[
+    C_{\mathrm{esp}} =
+    K_o N_Q + hT\bar I_{\mathrm{esp}}
+    + pN_Q E[(D_{L_e}-r)^+].
+\]
+
+Esta referencia no reemplaza a la simulacion: resume el sistema mediante demanda media, ciclos promedio y riesgo de faltante durante el tiempo de entrega. Sirve como punto de contraste para evaluar si la simulacion Python produce costos y decisiones de politica razonables.

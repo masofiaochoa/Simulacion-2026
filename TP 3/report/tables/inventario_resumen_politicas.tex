@@ -1,0 +1,20 @@
+% Generado desde results/inventory/experiments/inventario_resumen.csv
+\begin{table}[htbp]
+\centering
+\caption{Resumen de desempeno por politica de inventario.}
+\label{tab:inventario-resumen-politicas}
+\begin{tabular}{lrrrrrr}
+\toprule
+Politica & $Q$ & $r$ & Costo total & IC 95\% & Servicio & Faltantes \\
+\midrule
+\texttt{bajo\_inventario} & 80 & 45 & 17998.25 & 234.94 & 93.37\% & 485.80 \\
+\texttt{balanceada} & 120 & 70 & 16304.39 & 82.18 & 99.96\% & 2.70 \\
+\texttt{alto\_servicio} & 160 & 95 & 20235.96 & 87.62 & 100.00\% & 0.00 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+\begin{minipage}{0.95\linewidth}
+\centering\footnotesize
+El nivel de servicio se calcula como demanda satisfecha sobre demanda total. Los faltantes corresponden a ventas perdidas.
+\end{minipage}
+\end{table}

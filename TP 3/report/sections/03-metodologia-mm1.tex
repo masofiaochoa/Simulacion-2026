@@ -1,0 +1,82 @@
+\section{Metodologia de simulacion M/M/1}
+
+\subsection{Diseno experimental}
+
+La unidad de tiempo elegida para el modelo de colas es la hora. Se fija una tasa de servicio base:
+
+\begin{equation}
+    \mu = 10 \text{ clientes/hora}.
+\end{equation}
+
+Las tasas de arribo se definen como fracciones de $\mu$:
+
+\begin{equation}
+    \lambda \in \{0.25\mu, 0.50\mu, 0.75\mu, 1.00\mu, 1.25\mu\}.
+\end{equation}
+
+Por lo tanto, los valores de $\rho$ evaluados son $0.25$, $0.50$, $0.75$, $1.00$ y $1.25$. Para cada valor se simula una cola infinita y colas finitas con:
+
+\begin{equation}
+    B \in \{0,2,5,10,50\}.
+\end{equation}
+
+El horizonte de cada corrida es de $10000$ horas y se ejecutan $10$ replicas por experimento. Las semillas se derivan de una semilla base registrada, para que los resultados sean reproducibles.
+
+\subsection{Logica de eventos discretos}
+
+La simulacion mantiene un reloj y procesa dos tipos de eventos:
+
+\begin{itemize}
+    \item llegada de un cliente;
+    \item finalizacion de un servicio.
+\end{itemize}
+
+En cada llegada se agenda el siguiente arribo. Si el servidor esta libre, el cliente inicia servicio inmediatamente. Si el servidor esta ocupado y existe lugar en la cola, el cliente espera. Si la cola esta llena, el cliente se rechaza y se incrementa el contador de denegaciones.
+
+Los tiempos entre arribos y los tiempos de servicio se generan con variables exponenciales:
+
+\begin{align}
+    T_a &\sim \mathrm{Exp}(\lambda), \\
+    T_s &\sim \mathrm{Exp}(\mu).
+\end{align}
+
+\subsection{Metricas registradas}
+
+Las medidas temporales se calculan integrando el estado del sistema a lo largo del horizonte simulado. Si $T$ es el tiempo total de simulacion:
+
+\begin{align}
+    \widehat{L} &= \frac{1}{T}\int_0^T N(t)\,dt, \\
+    \widehat{L_q} &= \frac{1}{T}\int_0^T Q(t)\,dt, \\
+    \widehat{U} &= \frac{\text{tiempo ocupado del servidor}}{T}.
+\end{align}
+
+Para cada cliente atendido tambien se registra el tiempo de espera en cola y el tiempo total dentro del sistema. A partir de esos datos se estiman:
+
+\begin{align}
+    \widehat{W} &= \text{tiempo promedio en sistema}, \\
+    \widehat{W_q} &= \text{tiempo promedio en cola}.
+\end{align}
+
+La probabilidad de denegacion se estima como:
+
+\begin{equation}
+    \widehat{P}_{den} =
+    \frac{\text{clientes rechazados}}{\text{clientes generados}}.
+\end{equation}
+
+\subsection{Resumen estadistico}
+
+Para cada combinacion de parametros se calcula la media de las $10$ replicas, el desvio estandar muestral y un intervalo de confianza del $95\%$:
+
+\begin{equation}
+    \bar{X} \pm t_{0.975,9}\frac{s}{\sqrt{10}}.
+\end{equation}
+
+Cuando existe valor teorico estacionario, se reporta ademas el error porcentual:
+
+\begin{equation}
+    \text{Error \%} =
+    100 \frac{\bar{X} - X_{\mathrm{teorico}}}{X_{\mathrm{teorico}}}.
+\end{equation}
+
+Los experimentos de cola infinita con $\rho \geq 1$ se conservan porque forman parte de las tasas pedidas, pero se etiquetan como casos sin regimen estacionario. En consecuencia, sus metricas se interpretan como resultados de horizonte finito y no como aproximaciones a una teoria estacionaria.

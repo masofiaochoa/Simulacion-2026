@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="480.0" y="32" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700">M/M/1/K - Probabilidad de denegacion por capacidad de cola</text>
+<line x1="86" y1="480.00" x2="730" y2="480.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="484.00" text-anchor="end" font-family="Arial" font-size="12">0</text>
+<line x1="86" y1="398.00" x2="730" y2="398.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="402.00" text-anchor="end" font-family="Arial" font-size="12">0.111</text>
+<line x1="86" y1="316.00" x2="730" y2="316.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="320.00" text-anchor="end" font-family="Arial" font-size="12">0.222</text>
+<line x1="86" y1="234.00" x2="730" y2="234.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="238.00" text-anchor="end" font-family="Arial" font-size="12">0.333</text>
+<line x1="86" y1="152.00" x2="730" y2="152.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="156.00" text-anchor="end" font-family="Arial" font-size="12">0.444</text>
+<line x1="86" y1="70.00" x2="730" y2="70.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="74.00" text-anchor="end" font-family="Arial" font-size="12">0.556</text>
+<line x1="86" y1="480" x2="730" y2="480" stroke="#222" stroke-width="1.5"/>
+<line x1="86" y1="70" x2="86" y2="480" stroke="#222" stroke-width="1.5"/>
+<text x="86.00" y="504" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<text x="247.00" y="504" text-anchor="middle" font-family="Arial" font-size="12">2</text>
+<text x="408.00" y="504" text-anchor="middle" font-family="Arial" font-size="12">5</text>
+<text x="569.00" y="504" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<text x="730.00" y="504" text-anchor="middle" font-family="Arial" font-size="12">50</text>
+<text x="408.0" y="536" text-anchor="middle" font-family="Arial" font-size="14">Capacidad de cola</text>
+<text x="26" y="275.0" text-anchor="middle" font-family="Arial" font-size="14" transform="rotate(-90 26 275.0)">Probabilidad de denegacion</text>
+<polyline points="86.00,332.88 247.00,471.32 408.00,479.88 569.00,480.00 730.00,480.00" fill="none" stroke="#1f77b4" stroke-width="2.5"/>
+<circle cx="86.00" cy="332.88" r="4" fill="#1f77b4" stroke="#fff" stroke-width="1"/>
+<circle cx="247.00" cy="471.32" r="4" fill="#1f77b4" stroke="#fff" stroke-width="1"/>
+<circle cx="408.00" cy="479.88" r="4" fill="#1f77b4" stroke="#fff" stroke-width="1"/>
+<circle cx="569.00" cy="480.00" r="4" fill="#1f77b4" stroke="#fff" stroke-width="1"/>
+<circle cx="730.00" cy="480.00" r="4" fill="#1f77b4" stroke="#fff" stroke-width="1"/>
+<polyline points="86.00,233.89 247.00,431.31 408.00,474.03 569.00,479.80 730.00,480.00" fill="none" stroke="#d62728" stroke-width="2.5"/>
+<circle cx="86.00" cy="233.89" r="4" fill="#d62728" stroke="#fff" stroke-width="1"/>
+<circle cx="247.00" cy="431.31" r="4" fill="#d62728" stroke="#fff" stroke-width="1"/>
+<circle cx="408.00" cy="474.03" r="4" fill="#d62728" stroke="#fff" stroke-width="1"/>
+<circle cx="569.00" cy="479.80" r="4" fill="#d62728" stroke="#fff" stroke-width="1"/>
+<circle cx="730.00" cy="480.00" r="4" fill="#d62728" stroke="#fff" stroke-width="1"/>
+<polyline points="86.00,163.59 247.00,365.67 408.00,441.67 569.00,471.66 730.00,480.00" fill="none" stroke="#2ca02c" stroke-width="2.5"/>
+<circle cx="86.00" cy="163.59" r="4" fill="#2ca02c" stroke="#fff" stroke-width="1"/>
+<circle cx="247.00" cy="365.67" r="4" fill="#2ca02c" stroke="#fff" stroke-width="1"/>
+<circle cx="408.00" cy="441.67" r="4" fill="#2ca02c" stroke="#fff" stroke-width="1"/>
+<circle cx="569.00" cy="471.66" r="4" fill="#2ca02c" stroke="#fff" stroke-width="1"/>
+<circle cx="730.00" cy="480.00" r="4" fill="#2ca02c" stroke="#fff" stroke-width="1"/>
+<polyline points="86.00,110.40 247.00,296.12 408.00,375.09 569.00,418.30 730.00,465.32" fill="none" stroke="#9467bd" stroke-width="2.5"/>
+<circle cx="86.00" cy="110.40" r="4" fill="#9467bd" stroke="#fff" stroke-width="1"/>
+<circle cx="247.00" cy="296.12" r="4" fill="#9467bd" stroke="#fff" stroke-width="1"/>
+<circle cx="408.00" cy="375.09" r="4" fill="#9467bd" stroke="#fff" stroke-width="1"/>
+<circle cx="569.00" cy="418.30" r="4" fill="#9467bd" stroke="#fff" stroke-width="1"/>
+<circle cx="730.00" cy="465.32" r="4" fill="#9467bd" stroke="#fff" stroke-width="1"/>
+<polyline points="86.00,70.00 247.00,230.63 408.00,293.09 569.00,321.62 730.00,332.51" fill="none" stroke="#ff7f0e" stroke-width="2.5"/>
+<circle cx="86.00" cy="70.00" r="4" fill="#ff7f0e" stroke="#fff" stroke-width="1"/>
+<circle cx="247.00" cy="230.63" r="4" fill="#ff7f0e" stroke="#fff" stroke-width="1"/>
+<circle cx="408.00" cy="293.09" r="4" fill="#ff7f0e" stroke="#fff" stroke-width="1"/>
+<circle cx="569.00" cy="321.62" r="4" fill="#ff7f0e" stroke="#fff" stroke-width="1"/>
+<circle cx="730.00" cy="332.51" r="4" fill="#ff7f0e" stroke="#fff" stroke-width="1"/>
+<line x1="762" y1="78" x2="790" y2="78" stroke="#1f77b4" stroke-width="2.5"/>
+<text x="800" y="82" font-family="Arial" font-size="13">rho=0.25</text>
+<line x1="762" y1="102" x2="790" y2="102" stroke="#d62728" stroke-width="2.5"/>
+<text x="800" y="106" font-family="Arial" font-size="13">rho=0.5</text>
+<line x1="762" y1="126" x2="790" y2="126" stroke="#2ca02c" stroke-width="2.5"/>
+<text x="800" y="130" font-family="Arial" font-size="13">rho=0.75</text>
+<line x1="762" y1="150" x2="790" y2="150" stroke="#9467bd" stroke-width="2.5"/>
+<text x="800" y="154" font-family="Arial" font-size="13">rho=1</text>
+<line x1="762" y1="174" x2="790" y2="174" stroke="#ff7f0e" stroke-width="2.5"/>
+<text x="800" y="178" font-family="Arial" font-size="13">rho=1.25</text>
+</svg>

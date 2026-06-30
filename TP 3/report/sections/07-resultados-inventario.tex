@@ -1,0 +1,56 @@
+\section{Resultados del modelo de inventario}
+
+La Tabla~\ref{tab:inventario-resumen-politicas} resume el desempeno de las tres politicas. Con los parametros elegidos, la politica \texttt{balanceada} obtuvo el menor costo total promedio: $16304.39$, con un nivel de servicio de $99.96\%$ y un promedio de $2.70$ unidades faltantes por corrida. La politica \texttt{alto\_servicio} elimino los faltantes, pero su mayor inventario promedio incremento el costo de mantenimiento y llevo el costo total promedio a $20235.96$. La politica \texttt{bajo\_inventario} redujo el inventario disponible, pero acumulo $485.80$ unidades faltantes promedio y alcanzo un costo total promedio de $17998.25$.
+
+\input{tables/inventario_resumen_politicas}
+
+La Tabla~\ref{tab:inventario-costos} separa los componentes de costo. En \texttt{bajo\_inventario}, el costo de faltante es relevante y compensa negativamente el ahorro de mantenimiento. En \texttt{alto\_servicio}, el costo de faltante desaparece, pero el costo de mantenimiento domina. La politica \texttt{balanceada} queda como recomendacion inicial porque reduce el costo total sin sacrificar de manera apreciable el nivel de servicio.
+
+\input{tables/inventario_costos}
+
+\subsection{Comparacion contra referencia esperada}
+
+La Tabla~\ref{tab:inventario-comparacion-esperada} agrega una referencia esperada simplificada basada en demanda media, ciclos de reposicion y faltante esperado durante el tiempo de entrega. Esta referencia no busca reproducir exactamente cada detalle dinamico de la simulacion diaria, pero permite contrastar el orden de magnitud de los costos y el riesgo relativo de cada politica.
+
+\input{tables/inventario_comparacion_esperada}
+
+La comparacion confirma el trade-off principal. La politica \texttt{bajo\_inventario} parece atractiva si solo se mira el costo de mantenimiento, pero su punto de reorden queda por debajo de la demanda media esperada durante el tiempo de entrega, por lo que aparece mayor riesgo de faltantes. En ese caso la referencia simplificada resulta conservadora, porque evalua el riesgo por ciclo y no representa con todo detalle la superposicion diaria de pedidos pendientes que si aparece en la simulacion. La politica \texttt{alto\_servicio} controla ese riesgo, aunque con mayor inventario promedio. La politica \texttt{balanceada} queda en una zona intermedia y por eso resulta la mejor alternativa en las corridas Python.
+
+\subsection{Graficos generados}
+
+Los graficos se generaron originalmente en SVG dentro de \texttt{figures/inventory/} y se copiaron como PDF dentro de \texttt{report/figures/inventory/} para facilitar la compilacion del informe en Overleaf.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{inventario_disponible.pdf}
+    \caption{Inventario disponible promedio por dia para cada politica.}
+    \label{fig:inventario-disponible}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{demanda_diaria.pdf}
+    \caption{Demanda diaria promedio observada en las replicas de cada politica.}
+    \label{fig:inventario-demanda-diaria}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{costos_acumulados.pdf}
+    \caption{Costo total acumulado promedio durante el horizonte simulado.}
+    \label{fig:inventario-costos-acumulados}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{costo_total_por_politica.pdf}
+    \caption{Costo total promedio por politica con intervalo de confianza del 95\%.}
+    \label{fig:inventario-costo-total}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{nivel_servicio_por_politica.pdf}
+    \caption{Nivel de servicio promedio por politica con intervalo de confianza del 95\%.}
+    \label{fig:inventario-nivel-servicio}
+\end{figure}

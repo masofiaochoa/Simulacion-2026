@@ -1,0 +1,52 @@
+\documentclass[11pt]{article}
+
+\usepackage{arxiv}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{nicefrac}
+\usepackage{url}
+
+\graphicspath{{./figures/mm1/}{./figures/inventory/}}
+\renewcommand{\abstractname}{Resumen}
+\renewcommand{\keywordname}{\bfseries \emph{Palabras clave}}
+\renewcommand{\headeright}{Preprint}
+\renewcommand{\undertitle}{Preprint}
+\renewcommand{\shorttitle}{TP 3 - M/M/1 e inventario}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\title{TP 3 - Simulacion de un modelo M/M/1 e inventario}
+\author{Simulacion computacional}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+Este informe presenta el desarrollo de dos modelos del trabajo practico: un sistema de colas M/M/1 y un modelo de inventario con politica de revision continua $(Q,r)$. Para M/M/1 se documentan los supuestos teoricos, el diseno experimental, la simulacion por eventos discretos en Python y la comparacion contra resultados estacionarios cuando corresponde. Los casos de cola infinita con $\rho \geq 1$ se conservan como simulaciones de horizonte finito, pero no se comparan contra teoria estacionaria porque el modelo no posee regimen estable en esas condiciones. Para inventario se comparan tres politicas bajo demanda diaria Poisson, ventas perdidas y costos de orden, mantenimiento y faltante, incorporando una referencia esperada simplificada como punto de contraste. La comparacion con AnyLogic se integrara cuando esten disponibles los resultados del modelo desarrollado en paralelo.
+\end{abstract}
+\keywords{simulacion \and eventos discretos \and M/M/1 \and colas finitas \and inventario}
+
+\input{sections/01-introduccion}
+\input{sections/02-marco-teorico-mm1}
+\input{sections/03-metodologia-mm1}
+\input{sections/04-resultados-mm1}
+\input{sections/05-marco-teorico-inventario}
+\input{sections/06-metodologia-inventario}
+\input{sections/07-resultados-inventario}
+
+\clearpage
+\input{sections/99-repositorio-proyecto}
+
+\end{document}

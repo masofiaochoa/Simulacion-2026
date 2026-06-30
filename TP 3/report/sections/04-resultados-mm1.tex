@@ -1,0 +1,82 @@
+\section{Resultados M/M/1}
+
+Los resultados de Python se exportaron a \texttt{results/mm1/experiments/}. El archivo \texttt{mm1\_runs.csv} contiene una fila por corrida, mientras que \texttt{mm1\_summary.csv} y \texttt{mm1\_summary\_long.csv} contienen resumenes por experimento.
+
+\subsection{Cola infinita estable}
+
+Para $\rho=0.25$, $\rho=0.50$ y $\rho=0.75$, la cola infinita tiene regimen estacionario y puede compararse contra las formulas teoricas. La Tabla~\ref{tab:mm1-infinite-steady} muestra que las medias simuladas quedan cerca de los valores teoricos.
+
+\input{tables/mm1_infinite_steady_state}
+
+La Tabla~\ref{tab:mm1-queue-probabilities} reporta la probabilidad de observar $q$ clientes esperando en cola. Esta salida proviene del tiempo acumulado por longitud de cola durante la simulacion y se compara contra la distribucion estacionaria correspondiente.
+
+\input{tables/mm1_infinite_queue_probabilities}
+
+\subsection{Cola infinita sin regimen estacionario}
+
+Para $\rho=1.00$ y $\rho=1.25$, la cola infinita no tiene estado estacionario. Las corridas se mantienen para cumplir el barrido experimental, pero sus valores no deben interpretarse como una convergencia teorica.
+
+\input{tables/mm1_infinite_unstable}
+
+\subsection{Probabilidad de denegacion en colas finitas}
+
+En colas finitas, todos los valores de $\rho$ tienen referencia estacionaria porque el sistema bloquea arribos cuando alcanza su capacidad total. La Tabla~\ref{tab:mm1-denial-probability} compara la probabilidad de denegacion simulada con la teorica para cada capacidad de cola.
+
+\input{tables/mm1_denial_probability}
+
+\subsection{Graficos generados}
+
+Los graficos originales se generaron en SVG y luego se copiaron al informe como PDF dentro de \texttt{report/figures/mm1/}. De esta manera se evita depender de soporte SVG adicional al compilar en Overleaf.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_infinite_average_number_in_system.pdf}
+    \caption{Promedio de clientes en el sistema para cola infinita estable. Solo se incluyen casos con $\rho < 1$, donde existe valor estacionario teorico.}
+    \label{fig:mm1-infinite-number-system}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_infinite_average_number_in_queue.pdf}
+    \caption{Promedio de clientes en cola para cola infinita estable. La comparacion con teoria se restringe a $\rho < 1$.}
+    \label{fig:mm1-infinite-number-queue}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_infinite_average_time_in_system.pdf}
+    \caption{Tiempo promedio en el sistema para cola infinita estable.}
+    \label{fig:mm1-infinite-time-system}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_infinite_average_time_in_queue.pdf}
+    \caption{Tiempo promedio de espera en cola para cola infinita estable.}
+    \label{fig:mm1-infinite-time-queue}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_infinite_server_utilization.pdf}
+    \caption{Utilizacion del servidor para cola infinita estable.}
+    \label{fig:mm1-infinite-utilization}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_denial_probability_by_capacity.pdf}
+    \caption{Probabilidad de denegacion de servicio en colas finitas para distintas capacidades de espera $B$.}
+    \label{fig:mm1-denial-probability}
+\end{figure}
+
+\subsection{Evolucion temporal}
+
+Ademas de las medidas finales, se genero una corrida representativa de cola infinita con $\rho=0.75$ y horizonte de $100$ horas para observar la evolucion del estado del sistema. Esta serie temporal no reemplaza las estimaciones finales de las tablas, que usan $10000$ horas y $10$ replicas, sino que muestra visualmente la dinamica de llegadas, esperas y salidas a lo largo del tiempo.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.82\textwidth]{mm1_temporal_clientes_rho_075.pdf}
+    \caption{Evolucion temporal de clientes en sistema y clientes en cola para una corrida representativa con $\rho=0.75$.}
+    \label{fig:mm1-temporal-clientes}
+\end{figure}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="480.0" y="32" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700">Costo total promedio por politica</text>
+<line x1="86" y1="472.00" x2="740" y2="472.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="476.00" text-anchor="end" font-family="Arial" font-size="12">0</text>
+<line x1="86" y1="391.60" x2="740" y2="391.60" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="395.60" text-anchor="end" font-family="Arial" font-size="12">4.67e+03</text>
+<line x1="86" y1="311.20" x2="740" y2="311.20" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="315.20" text-anchor="end" font-family="Arial" font-size="12">9.35e+03</text>
+<line x1="86" y1="230.80" x2="740" y2="230.80" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="234.80" text-anchor="end" font-family="Arial" font-size="12">1.4e+04</text>
+<line x1="86" y1="150.40" x2="740" y2="150.40" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="154.40" text-anchor="end" font-family="Arial" font-size="12">1.87e+04</text>
+<line x1="86" y1="70.00" x2="740" y2="70.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="76" y="74.00" text-anchor="end" font-family="Arial" font-size="12">2.34e+04</text>
+<line x1="86" y1="472" x2="740" y2="472" stroke="#222" stroke-width="1.5"/>
+<line x1="86" y1="70" x2="86" y2="472" stroke="#222" stroke-width="1.5"/>
+<text x="86.00" y="497" text-anchor="middle" font-family="Arial" font-size="12">bajo_inventario</text>
+<text x="413.00" y="497" text-anchor="middle" font-family="Arial" font-size="12">balanceada</text>
+<text x="740.00" y="497" text-anchor="middle" font-family="Arial" font-size="12">alto_servicio</text>
+<text x="413.0" y="535" text-anchor="middle" font-family="Arial" font-size="14">Politica</text>
+<text x="26" y="271.0" text-anchor="middle" font-family="Arial" font-size="14" transform="rotate(-90 26 271.0)">Costo total</text>
+<rect x="42.00" y="162.43" width="88.00" height="309.57" fill="#1f77b4" opacity="0.88"/>
+<line x1="86.00" y1="166.47" x2="86.00" y2="158.39" stroke="#222" stroke-width="1.6"/>
+<line x1="78.00" y1="158.39" x2="94.00" y2="158.39" stroke="#222" stroke-width="1.6"/>
+<line x1="78.00" y1="166.47" x2="94.00" y2="166.47" stroke="#222" stroke-width="1.6"/>
+<rect x="369.00" y="191.56" width="88.00" height="280.44" fill="#d62728" opacity="0.88"/>
+<line x1="413.00" y1="192.98" x2="413.00" y2="190.15" stroke="#222" stroke-width="1.6"/>
+<line x1="405.00" y1="190.15" x2="421.00" y2="190.15" stroke="#222" stroke-width="1.6"/>
+<line x1="405.00" y1="192.98" x2="421.00" y2="192.98" stroke="#222" stroke-width="1.6"/>
+<rect x="696.00" y="123.94" width="88.00" height="348.06" fill="#2ca02c" opacity="0.88"/>
+<line x1="740.00" y1="125.45" x2="740.00" y2="122.43" stroke="#222" stroke-width="1.6"/>
+<line x1="732.00" y1="122.43" x2="748.00" y2="122.43" stroke="#222" stroke-width="1.6"/>
+<line x1="732.00" y1="125.45" x2="748.00" y2="125.45" stroke="#222" stroke-width="1.6"/>
+</svg>

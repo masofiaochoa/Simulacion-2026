@@ -1,0 +1,91 @@
+\section{Marco teorico del modelo M/M/1}
+
+\subsection{Supuestos del modelo}
+
+El modelo M/M/1 representa un sistema de espera con una sola estacion de servicio. La primera M indica que los tiempos entre arribos siguen una distribucion exponencial, equivalente a un proceso de Poisson para la cantidad de arribos. La segunda M indica que los tiempos de servicio tambien son exponenciales. El numero 1 indica que existe un unico servidor.
+
+En este trabajo se asume disciplina FIFO, es decir, los clientes son atendidos en el mismo orden en el que llegan. Las tasas se expresan en clientes por hora:
+
+\begin{itemize}
+    \item $\lambda$: tasa media de arribos.
+    \item $\mu$: tasa media de servicio.
+    \item $\rho = \lambda / \mu$: factor de carga o utilizacion teorica del sistema con cola infinita.
+\end{itemize}
+
+\subsection{Cola infinita}
+
+Para una cola infinita, el sistema solo tiene regimen estacionario si:
+
+\begin{equation}
+    \rho < 1.
+\end{equation}
+
+Cuando esta condicion se cumple, las medidas teoricas usadas para validar la simulacion son:
+
+\begin{align}
+    L &= \frac{\rho}{1-\rho}, \\
+    L_q &= \frac{\rho^2}{1-\rho}, \\
+    W &= \frac{1}{\mu-\lambda}, \\
+    W_q &= \frac{\lambda}{\mu(\mu-\lambda)}, \\
+    U &= \rho.
+\end{align}
+
+Donde $L$ es el numero promedio de clientes en el sistema, $L_q$ es el numero promedio de clientes en cola, $W$ es el tiempo promedio en el sistema, $W_q$ es el tiempo promedio de espera en cola y $U$ es la utilizacion del servidor.
+
+Para la distribucion de longitud de cola se usa la relacion entre el numero de clientes en sistema $N$ y el numero de clientes esperando $Q$. Si $Q=0$, el sistema puede estar vacio o tener un cliente en servicio. Por lo tanto:
+
+\begin{align}
+    P(Q=0) &= P(N=0) + P(N=1), \\
+    P(Q=q) &= P(N=q+1), \quad q \geq 1.
+\end{align}
+
+Como en M/M/1 estable $P(N=n)=(1-\rho)\rho^n$, queda:
+
+\begin{align}
+    P(Q=0) &= (1-\rho)(1+\rho), \\
+    P(Q=q) &= (1-\rho)\rho^{q+1}, \quad q \geq 1.
+\end{align}
+
+Si $\rho \geq 1$, la cola infinita no tiene valores estacionarios finitos. En esos casos la simulacion por horizonte finito puede generar metricas observadas, pero no corresponde compararlas contra las formulas estacionarias anteriores.
+
+\subsection{Cola finita}
+
+Para estudiar denegacion de servicio se usa una cola con capacidad finita. En el codigo y en las tablas, $B$ representa la cantidad maxima de clientes que pueden esperar en cola. Como ademas puede haber un cliente en servicio, la capacidad total del sistema es:
+
+\begin{equation}
+    K = B + 1.
+\end{equation}
+
+El estado $n$ representa la cantidad de clientes dentro del sistema, con $0 \leq n \leq K$. Las probabilidades estacionarias para M/M/1/K son:
+
+\begin{equation}
+    P_n =
+    \begin{cases}
+        \frac{(1-\rho)\rho^n}{1-\rho^{K+1}}, & \rho \neq 1, \\
+        \frac{1}{K+1}, & \rho = 1.
+    \end{cases}
+\end{equation}
+
+La probabilidad de denegacion es la probabilidad de que el sistema este lleno al momento de un arribo:
+
+\begin{equation}
+    P_{den} = P_K.
+\end{equation}
+
+La tasa efectiva de clientes aceptados queda:
+
+\begin{equation}
+    \lambda_{\mathrm{eff}} = \lambda(1-P_{den}).
+\end{equation}
+
+Con estas probabilidades, las medidas teoricas se calculan como:
+
+\begin{align}
+    L &= \sum_{n=0}^{K} n P_n, \\
+    L_q &= \sum_{n=0}^{K} \max(n-1,0) P_n, \\
+    W &= \frac{L}{\lambda_{\mathrm{eff}}}, \\
+    W_q &= \frac{L_q}{\lambda_{\mathrm{eff}}}, \\
+    U &= 1-P_0.
+\end{align}
+
+A diferencia de la cola infinita, el modelo con capacidad finita tiene regimen estacionario tambien para $\rho \geq 1$, porque los arribos excedentes se rechazan cuando el sistema esta lleno.
