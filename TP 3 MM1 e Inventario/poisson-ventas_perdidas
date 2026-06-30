@@ -1,0 +1,72 @@
+import numpy as np
+
+# 1. PARÁMETROS INICIALES
+DIAS_SIMULACION = 300
+REPLICACIONES = 10
+
+STOCK_INICIAL = 60
+LEAD_TIME = 3
+
+# Parámetros de Costos
+COSTO_ORDEN = 50.0
+COSTO_MANTENIMIENTO = 2.0  
+COSTO_FALTANTE = 15.0      
+
+# Demanda Poisson (Lambda)
+DEMANDA_LAMBDA = 10.0
+
+# Las tres políticas (Q, r) a comparar
+# Política 1: (Q=40, r=20), Política 2: (Q=50, r=15), Política 3: (Q=60, r=10)
+politicas = [(40, 20), (50, 15), (60, 10)]
+
+def ejecutar_una_corrida(q_pedido, p_reorden):
+    inventario_fisico = STOCK_INICIAL
+    inventario_transito = 0
+    dias_para_entrega = -1
+    
+    c_orden_acum = 0.0
+    c_mant_acum = 0.0
+    c_falt_acum = 0.0
+    
+    for dia in range(1, DIAS_SIMULACION + 1):
+        # A. Llegada de pedido pendiente
+        if dias_para_entrega == 0:
+            inventario_fisico += q_pedido
+            inventario_transito = 0
+            dias_para_entrega = -1
+        elif dias_para_entrega > 0:
+            dias_para_entrega -= 1
+            
+        # B. Generación de demanda diaria (Poisson)
+        demanda = np.random.poisson(DEMANDA_LAMBDA)
+        
+        # C. Satisfacción de la demanda y Ventas Perdidas
+        if demanda > inventario_fisico:
+            ventas_perdidas = demanda - inventario_fisico
+            c_falt_acum += ventas_perdidas * COSTO_FALTANTE
+            inventario_fisico = 0 # El stock no baja de 0 (venta perdida)
+        else:
+            inventario_fisico -= demanda
+        
+        # D. Costo de mantenimiento (sobre stock final del día)
+        c_mant_acum += inventario_fisico * COSTO_MANTENIMIENTO
+            
+        # E. Revisión (Q, r)
+        inventario_posicion = inventario_fisico + inventario_transito
+        if inventario_posicion <= p_reorden and dias_para_entrega == -1:
+            c_orden_acum += COSTO_ORDEN
+            inventario_transito = q_pedido
+            dias_para_entrega = LEAD_TIME - 1
+            
+    return c_orden_acum, c_mant_acum, c_falt_acum, (c_orden_acum + c_mant_acum + c_falt_acum)
+
+# 2. EJECUCIÓN POR CADA POLÍTICA
+for idx, (q, r) in enumerate(politicas, 1):
+    resultados_total = []
+    
+    for _ in range(REPLICACIONES):
+        _, _, _, ct = ejecutar_una_corrida(q, r)
+        resultados_total.append(ct)
+        
+    print(f"=== POLÍTICA {idx}: Q={q}, r={r} ===")
+    print(f"Costo Total Promedio (10 corridas): ${np.mean(resultados_total):.2f}\n")
